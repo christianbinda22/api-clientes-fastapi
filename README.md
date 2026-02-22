@@ -1,24 +1,28 @@
 API de Clientes - FastAPI
 
-Projeto de API REST desenvolvido com Python e FastAPI.
+API REST desenvolvida com Python + FastAPI para gerenciamento de usuários e clientes, com autenticação JWT e rotas protegidas.
 
-Funcionalidades
+📌 Sobre o projeto
+
+Este projeto foi criado com foco em práticas reais de desenvolvimento Back-End:
+
+Estrutura modular
 
 Autenticação com JWT
 
-Cadastro de usuários
+CRUD completo
 
-Login
+Integração com banco de dados
 
-CRUD de clientes
+Proteção de rotas
 
-Rotas protegidas por token
+Organização em camadas
 
-Integração com banco de dados via SQLAlchemy
+Projeto desenvolvido como parte da formação prática para atuação como Desenvolvedor Back-End Python.
 
-Tecnologias utilizadas
+🚀 Tecnologias utilizadas
 
-Python
+Python 3
 
 FastAPI
 
@@ -28,32 +32,93 @@ SQLite / MySQL
 
 Uvicorn
 
-JWT
+JWT (Autenticação)
 
-Git e GitHub
+Git & GitHub
 
-Como executar o projeto
-
-Clonar o repositório
-
+📂 Estrutura do projeto
+api-clientes-fastapi/
+│
+├── app/
+│   ├── main.py
+│   ├── routes.py
+│   ├── models.py
+│   ├── database.py
+│   ├── auth.py
+│   └── __init__.py
+│
+├── requirements.txt
+├── README.md
+└── .gitignore
+⚙️ Como executar o projeto
+1. Clonar o repositório
 git clone https://github.com/christianbinda22/api-clientes-fastapi.git
+cd api-clientes-fastapi
+2. Criar ambiente virtual
 
-Criar ambiente virtual
+Windows:
 
 python -m venv venv
 venv\Scripts\activate
 
-Instalar dependências
+Linux / Mac:
 
+python3 -m venv venv
+source venv/bin/activate
+3. Instalar dependências
 pip install -r requirements.txt
-
-Executar a aplicação
-
+4. Executar o servidor
 uvicorn app.main:app --reload
 
-Acesse:
+Acesse a documentação automática:
+
 http://127.0.0.1:8000/docs
+🔐 Autenticação
 
-Autor
+Criar usuário
 
-Desenvolvedor Back-End em formação, focado em Python e APIs REST.
+Fazer login
+
+Copiar o token
+
+Clicar em Authorize no Swagger
+
+Usar o token nas rotas protegidas
+
+📌 Funcionalidades
+
+Cadastro de usuários
+
+Login com JWT
+
+Criação de clientes
+
+Listagem de clientes
+
+Descontos por tipo:
+
+Novo: 0%
+
+Fidelizado: 5%
+
+Premium: 10%
+
+📈 Próximas melhorias (Roadmap)
+
+Validação com Pydantic
+
+Testes automatizados (Pytest)
+
+Docker
+
+Deploy em cloud
+
+Paginação e filtros
+
+👨‍💻 Autor
+
+Christian Binda
+Desenvolvedor Back-End Python
+Buscando oportunidade como Desenvolvedor Júnior
+
+GitHub: https://github.com/christianbinda22
