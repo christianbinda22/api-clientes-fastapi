@@ -82,3 +82,60 @@ def login(username: str, senha: str, db: Session = Depends(get_db)):
     token = criar_token({"sub": usuario.username})
 
     return {"access_token": token, "token_type": "bearer"}
+    
+@router.get("/clientes/{cliente_id}")
+def buscar_cliente(
+    cliente_id: int,
+    db: Session = Depends(get_db),
+    current_user: str = Depends(get_current_user)
+):
+    cliente = db.query(models.Cliente).filter(models.Cliente.id == cliente_id).first()
+
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+
+    return cliente
+
+@router.put("/clientes/{cliente_id}")
+def atualizar_cliente(
+    cliente_id: int,
+    nome: str,
+    tipo: str,
+    db: Session = Depends(get_db),
+    current_user: str = Depends(get_current_user)
+):
+    cliente = db.query(models.Cliente).filter(models.Cliente.id == cliente_id).first()
+
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+
+    descontos = {
+        "novo": 0,
+        "fidelizado": 5,
+        "premium": 10
+    }
+
+    cliente.nome = nome
+    cliente.tipo = tipo
+    cliente.desconto = descontos.get(tipo.lower(), 0)
+
+    db.commit()
+    db.refresh(cliente)
+
+    return cliente
+
+@router.delete("/clientes/{cliente_id}")
+def deletar_cliente(
+    cliente_id: int,
+    db: Session = Depends(get_db),
+    current_user: str = Depends(get_current_user)
+):
+    cliente = db.query(models.Cliente).filter(models.Cliente.id == cliente_id).first()
+
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+
+    db.delete(cliente)
+    db.commit()
+
+    return {"msg": "Cliente deletado com sucesso"}
