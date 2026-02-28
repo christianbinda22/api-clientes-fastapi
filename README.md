@@ -1,124 +1,106 @@
-API de Clientes - FastAPI
+ 🧱 Sales Management API
 
-API REST desenvolvida com Python + FastAPI para gerenciamento de usuários e clientes, com autenticação JWT e rotas protegidas.
+API RESTful para gerenciamento de vendas, clientes, produtos e pedidos.
+Projeto desenvolvido com foco em boas práticas de arquitetura backend, autenticação segura e modelagem relacional com SQLAlchemy.
 
-📌 Sobre o projeto
+---
 
-Este projeto foi criado com foco em práticas reais de desenvolvimento Back-End:
+## 📌 Visão Geral
 
-Estrutura modular
+Esta API simula um sistema interno de controle de vendas para uma empresa de gesso 3D.
 
-Autenticação com JWT
+O sistema permite:
 
-CRUD completo
+- Gerenciamento de clientes
+- Cadastro de usuários (funcionários)
+- Controle de produtos e estoque
+- Criação de pedidos com múltiplos itens
+- Cálculo de valor total automaticamente
+- Autenticação via JWT
+- Controle de permissões (admin)
 
-Integração com banco de dados
+---
 
-Proteção de rotas
+## 🏗 Arquitetura
 
-Organização em camadas
+O projeto segue separação em camadas:
 
-Projeto desenvolvido como parte da formação prática para atuação como Desenvolvedor Back-End Python.
+- `models` → Mapeamento ORM (SQLAlchemy)
+- `schemas` → Validação de dados (Pydantic)
+- `routers` → Endpoints organizados por domínio
+- `services` → Regras de negócio
+- `database` → Conexão e sessão do banco
 
-🚀 Tecnologias utilizadas
+---
 
-Python 3
+## 🛠 Tecnologias Utilizadas
 
-FastAPI
+- Python 3.x
+- FastAPI
+- SQLAlchemy ORM
+- JWT Authentication
+- SQLite (dev) / PostgreSQL (produção-ready)
+- Uvicorn
 
-SQLAlchemy
+---
 
-SQLite / MySQL
+## 🔐 Autenticação
 
-Uvicorn
+A autenticação é feita via JWT.
 
-JWT (Autenticação)
+### Fluxo:
 
-Git & GitHub
+1. Login com username e senha
+2. Retorno de access_token
+3. Envio do token no header:
 
-📂 Estrutura do projeto
-api-clientes-fastapi/
-│
-├── app/
-│   ├── main.py
-│   ├── routes.py
-│   ├── models.py
-│   ├── database.py
-│   ├── auth.py
-│   └── __init__.py
-│
-├── requirements.txt
-├── README.md
-└── .gitignore
-⚙️ Como executar o projeto
-1. Clonar o repositório
-git clone https://github.com/christianbinda22/api-clientes-fastapi.git
-cd api-clientes-fastapi
-2. Criar ambiente virtual
+Authorization: Bearer {token}
 
-Windows:
+---
 
+## 🗂 Modelagem do Banco
+
+### Entidades principais
+
+Cliente → Pedido → ItemPedido → Produto  
+Usuario → Pedido
+
+Relacionamentos implementados com `relationship()` e `ForeignKey`.
+
+---
+
+## ▶️ Executando o Projeto
+
+```bash
+git clone <repo>
+cd projeto_api
 python -m venv venv
-venv\Scripts\activate
-
-Linux / Mac:
-
-python3 -m venv venv
-source venv/bin/activate
-3. Instalar dependências
+source venv/bin/activate  # ou venv\Scripts\activate no Windows
 pip install -r requirements.txt
-4. Executar o servidor
 uvicorn app.main:app --reload
+📄 Documentação Interativa
 
-Acesse a documentação automática:
+Swagger:
+http://localhost:8000/docs
 
-http://127.0.0.1:8000/docs
-🔐 Autenticação
+Redoc:
+http://localhost:8000/redoc
 
-Criar usuário
+📌 Melhorias Futuras
 
-Fazer login
+Paginação
 
-Copiar o token
+Filtros avançados
 
-Clicar em Authorize no Swagger
-
-Usar o token nas rotas protegidas
-
-📌 Funcionalidades
-
-Cadastro de usuários
-
-Login com JWT
-
-Criação de clientes
-
-Listagem de clientes
-
-Descontos por tipo:
-
-Novo: 0%
-
-Fidelizado: 5%
-
-Premium: 10%
-
-📈 Próximas melhorias (Roadmap)
-
-Validação com Pydantic
+Logs estruturados
 
 Testes automatizados (Pytest)
 
-Docker
+Dockerização
 
 Deploy em cloud
-
-Paginação e filtros
 
 👨‍💻 Autor
 
 Christian Binda
-Desenvolvedor Back-End Python
-Buscando oportunidade como Desenvolvedor Júnior
-
-GitHub: https://github.com/christianbinda22
+Backend Developer
