@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi import FastAPI
+from app.routes import router
 from .routes import router
 from .database import engine, Base
 
