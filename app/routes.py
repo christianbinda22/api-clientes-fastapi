@@ -4,10 +4,14 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from .database import SessionLocal
 from . import models
+from . import schemas
+from jose import jwt, JWTError
+from .auth import hash_senha, verificar_senha, criar_token, SECRET_KEY, ALGORITHM
+
 
 router = APIRouter()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 def get_db():
     db = SessionLocal()
@@ -25,6 +29,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         return username
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido")
+        print("TOKEN RECEBIDO:", token)
 
 @router.post("/token")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
@@ -55,12 +60,20 @@ def criar_cliente(nome: str, tipo: str, db: Session = Depends(get_db), current_u
 
     return cliente
 
-@router.get("/clientes")
+@router.get("/clientes", response_model=list[schemas.ClienteResponse])
 def listar_clientes(db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
     return db.query(models.Cliente).all()
 
 @router.post("/usuarios")
 def criar_usuario(username: str, senha: str, db: Session = Depends(get_db)):
+    
+    usuario_existente = db.query(models.Usuario).filter(
+        models.Usuario.username == username
+    ).first()
+
+    if usuario_existente:
+        raise HTTPException(status_code=400, detail="Usuário já existe")
+
     usuario = models.Usuario(
         username=username,
         senha=hash_senha(senha)
@@ -83,19 +96,6 @@ def login(username: str, senha: str, db: Session = Depends(get_db)):
 
     return {"access_token": token, "token_type": "bearer"}
     
-@router.get("/clientes/{cliente_id}")
-def buscar_cliente(
-    cliente_id: int,
-    db: Session = Depends(get_db),
-    current_user: str = Depends(get_current_user)
-):
-    cliente = db.query(models.Cliente).filter(models.Cliente.id == cliente_id).first()
-
-    if not cliente:
-        raise HTTPException(status_code=404, detail="Cliente não encontrado")
-
-    return cliente
-
 @router.put("/clientes/{cliente_id}")
 def atualizar_cliente(
     cliente_id: int,
@@ -139,3 +139,20 @@ def deletar_cliente(
     db.commit()
 
     return {"msg": "Cliente deletado com sucesso"}
+
+@router.get("/clientes", response_model=list[schemas.ClienteResponse])
+def listar_clientes(
+    skip: int = 0,
+    limit: int = 10,
+    tipo: str = None,
+    db: Session = Depends(get_db),
+    current_user: str = Depends(get_current_user)
+):
+    query = db.query(models.Cliente)
+
+    if tipo:
+        query = query.filter(models.Cliente.tipo == tipo)
+
+    clientes = query.offset(skip).limit(limit).all()
+
+    return clientes
